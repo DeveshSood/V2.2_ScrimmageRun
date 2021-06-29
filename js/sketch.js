@@ -17,11 +17,8 @@ var laserSound;
 var laughSound;
 var bkgrdSound;
 
-var shots, chk = 0, potion, potiongrp, potioni;
+var shots, chk = 0;
 var score = 0,health = 6;
-var gpke =0;
-var epke =0;
-var hpt =0;
 
 function preload() {
   
@@ -33,7 +30,6 @@ function preload() {
   grdi = loadImage("images/grass2.PNG");
   gpki = loadImage("images/good pmk.png");
   epki = loadImage("images/evil pmk.png");
-  potioni = loadImage("images/potion.png")
   shi = loadImage("images/LA.png");
   tri = loadImage("images/tree1.png");
   hi = loadImage("images/house.png");
@@ -85,7 +81,6 @@ function setup() {
   shots = new Group();
   gpkgrp = new Group();
   epkgrp = new Group();
-  potiongrp = new Group();
   fill(255); 
 }
 
@@ -122,9 +117,6 @@ function draw() {
   }
   if(frameCount%300===0){
     laughSound.play();
-  }  
-  if(frameCount%950===0 && health<5){
-    hpPotion();
   }
 
   hits();
@@ -135,7 +127,6 @@ function draw() {
       epkgrp.destroyEach();
       gpkgrp.destroyEach();
       shots.destroyEach();
-      potiongrp.destroyEach();
       gmor.visible = true;
       bkgrdSound.stop();
       rest.visible = true;
@@ -143,9 +134,6 @@ function draw() {
     drawSprites();
     textSize(20)
     text("Score : " +score,1330,50);
-    text("Good Pumpkins Eaten : "+gpke, 200, 50);
-    text("Potions Drank : "+hpt, 600, 50);
-    text("Evil Pumpkins Eaten : "+epke, 900, 50)
     text("Health : " +health,20,50);
    }
    if(gmst==="end"){
@@ -189,29 +177,19 @@ function hits(){
     if(shots[i].isTouching(gi)){
       shots[i].destroy();
       health = health - 1;
-      score = score - 5;
+      score = score - 2;
     }
   }
   for (j = 0; j < gpkgrp.length; j++){ 
   if(gpkgrp[j].isTouching(gi)){
-    score = score +16;
-    gpke++;
+    score = score +6;
     gpkgrp[j].destroy();
   }
  }
   for (k = 0; k <epkgrp.length; k++){
     if(epkgrp[k].isTouching(gi)){
-      score = score -4;
-      epke++;
+      score = score -3;
       epkgrp[k].destroy();
-    }
-  }
-  for(l = 0;l < potiongrp.length;l++){
-    if(potiongrp[l].isTouching(gi)){
-      potiongrp[l].destroy();
-      health = health + 1;
-      score = score - 8;
-      hpt++;
     }
   }
 }
@@ -237,17 +215,6 @@ function epumpkin(){
   epk.setCollider("circle",0,30,70);
   epkgrp.add(epk);
 }
-function hpPotion(){
-  potion = createSprite(1500,530,20,20);
-  potion.addImage(potioni);
-  potion.scale = 0.6;
-  potion.velocityX = -4;
-  potion.lifetime = 400;
-  potion.depth = grd.depth -1;
-  //potion.debug = true;
-  potion.setCollider("circle",0,0,45);
-  potiongrp.add(potion);
-}
 function Reset(){
      if(mousePressedOver(rest) && mouseDown("leftButton") || keyDown("space")){
        gmst = "play";
@@ -266,9 +233,6 @@ function Reset(){
        gpk.visible = true;
        gmor.visible = false;
        rest.visible = false;
-       hpt=0;
-       epke=0;
-       gpke=0;
        score = 0;
        health = 6;
        bkgrdSound.loop();
